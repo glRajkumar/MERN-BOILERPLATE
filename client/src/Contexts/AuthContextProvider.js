@@ -33,7 +33,7 @@ const AuthContextProvider = (props) =>{
         }
     }).then((res)=>{
       setEmail(res.data.email)
-      history.push("/todolist")
+      history.push("/")
     })
     }
   }, [token])
