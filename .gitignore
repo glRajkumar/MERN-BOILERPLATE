@@ -1,0 +1,11 @@
+/node_modules
+/build
+
+.env
+test.http
+
+npm-debug.log*
+yarn-debug.kog*
+yarn-error.log*
+
+.vscode
