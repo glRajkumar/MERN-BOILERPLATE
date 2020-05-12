@@ -1,5 +1,6 @@
 ## Installing dependecies...
 npm install for both server and client(cd - /client).
+Or delete client folder and then install using the command "npx create-react-app client" and add proxy in package.json.
 
 ## Changes to consider
 engines in package.json in server,
