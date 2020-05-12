@@ -6,7 +6,7 @@ engines in package.json in server,
 histry.push in AuthContextProvider (in useLayout)
 
 ## Add .env file
-to hide credentials and install dotenv package.
+to hide credentials.
 {
  "MONGODB_URI",
  "jwtSecretKey"
