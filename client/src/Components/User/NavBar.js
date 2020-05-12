@@ -8,7 +8,7 @@ const NavBar = ({email}) =>{
     return(
     <nav className="navbar text-light bg-dark">
         <Link className="navbar-brand text-light" to="/">
-            Todo App
+            your App
         </Link>
         
         <div className="form-inline">

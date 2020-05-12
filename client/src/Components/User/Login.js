@@ -40,7 +40,7 @@ const Login = () => {
                 const data = await res.data
                 updateToken(data) 
                 updateEmail(email)
-                history.push("/todolist")                    
+                history.push("/")                    
             }
         } catch (error) {
             setLoading(false)
