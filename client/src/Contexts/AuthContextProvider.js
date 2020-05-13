@@ -1,53 +1,90 @@
-import React, { createContext, useState, useLayoutEffect } from 'react'
+import React, { createContext, useLayoutEffect, useReducer } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
+import AuthReducer from '../Reducers/AuthReducer'
 
 export const AuthContext = createContext()
 
 const AuthContextProvider = (props) =>{
-  const [ email, setEmail ] = useState('')
-  const [ token, setToken ] = useState('')
+  const inialState = {
+    email : "",
+    token : "",
+    loading : true,
+    error : ""
+  }
+  const [state, dispatch] = useReducer(AuthReducer, inialState)
+  
   const history = useHistory()
 
   let headers = {
-    Authorization: "Bearer " + token
+    Authorization: "Bearer " + state.token
   }
- 
-  const updateEmail = value => setEmail(value)
-  
-  const updateToken = (value) => {
-    localStorage.setItem("token", value);
-    setToken(value)
-  }
-  
-  useLayoutEffect(()=>{
-    let existed = localStorage.getItem("token")
-    if(existed){
-      setToken(existed)
-    } 
-  
-    if(token !== ''){
-      axios.get("/user/me",{
-        headers : {
-            Authorization: "Bearer " + token
+   
+  useLayoutEffect(() => logged(), [])
+
+  const logged = async () => {
+    try {
+      const existed = localStorage.getItem("token")
+      if(existed && existed !== ""){
+        const res = await axios.get("/user/me",{ 
+          headers : { 
+            Authorization: "Bearer " + existed 
+          }
+        })
+
+        const payload = {
+          email : res.data.email,
+          token : existed
         }
-    }).then((res)=>{
-      setEmail(res.data.email)
-      history.push("/")
-    })
+
+        dispatch({ type : "LOGIN", payload })
+        history.push("/")
+      }
+    } catch (error) {
+      console.log(error)
+      dispatch({ type : "ERROR" })
     }
-  }, [token])
+  }
+
+  const login = async (formData) => {
+    try {
+      const res = await axios.post("/user/login", formData)
+      const data = await res.data
+
+      const payload = {
+        email : formData.email,
+        token : data
+      }
+
+      localStorage.setItem("token", data)
+      dispatch({ type : "LOGIN", payload })
+      history.push("/")                    
+    } catch (error) {
+      console.log(error)
+      dispatch({ type : "ERROR" })
+    }
+  }
   
   const logout = async () =>{
-    await axios.post("/user/logout",{},{headers})
-    localStorage.removeItem("token")
-    setEmail('')
-    setToken('')
-    history.push("/login")
+    try {
+      await axios.post("/user/logout",{},{headers})
+      localStorage.removeItem("token")
+      dispatch({ type : "LOGOUT" })
+      history.push("/login")
+    } catch (error) {
+      console.log(error)
+      dispatch({ type : "ERROR" })
+    }
   }
   
   return(
-      <AuthContext.Provider value={{email, token, headers, updateToken, updateEmail, logout}}>
+      <AuthContext.Provider value={{
+        email : state.email, 
+        token : state.token, 
+        headers, 
+        login, 
+        logout
+      }}>
           {props.children}
       </AuthContext.Provider>
   );

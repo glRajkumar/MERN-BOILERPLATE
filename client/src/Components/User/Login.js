@@ -1,19 +1,17 @@
 import React, {useState, useContext, useRef, useEffect} from 'react'
-import axios from 'axios'
-import {useHistory, Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AuthContext } from '../../Contexts/AuthContextProvider'
 import Loading from '../Common/Loading'
 import { useEvalid, usePvalid } from '../../Customs/useValidation'
 import useInput from '../../Customs/useInput'
 
 const Login = () => {
-    const { updateEmail, updateToken } = useContext(AuthContext)
+    const { login } = useContext(AuthContext)
     const [ email, eonChange, emsg, eerr ] = useInput('', useEvalid)
     const [ password, ponChange, pmsg, perr ] = useInput('', usePvalid)
 
     const [ logfail, setLogfail ] = useState(false)
     const [ loading, setLoading ] = useState(false)
-    const history = useHistory()
     
     let emailRef = useRef('')
     let passRef = useRef('')
@@ -36,11 +34,7 @@ const Login = () => {
         try {
             if(email !== "" && password !== "" && eerr === false && perr === false){
                 setLoading(true)
-                const res = await axios.post("/user/login",{ email, password })
-                const data = await res.data
-                updateToken(data) 
-                updateEmail(email)
-                history.push("/")                    
+                login({ email, password })
             }
         } catch (error) {
             setLoading(false)
@@ -48,7 +42,7 @@ const Login = () => {
             setLogfail(true)
         }
     }
-
+    
     return !loading ? (
         <>
         <div className="row">
