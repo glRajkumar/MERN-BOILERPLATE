@@ -4,10 +4,10 @@ Or delete client folder and then install using the command "npx create-react-app
 
 ## Changes to consider
 engines in package.json in server,
-histry.push in AuthContextProvider (in useLayout) and Login (onsubmit)
+histry.push in AuthContextProvider (in login and logged)
 
-## Add .env file
-to hide credentials.
+## To hide credentials
+Add .env file outside of server.
 {
  "MONGODB_URI",
  "jwtSecretKey"
@@ -21,4 +21,3 @@ here we used bcryptjs package. If you need bcrypt, just changed it.
 
 ## For new creation like boilerplate (helps in push)
 first remove git in client folder (using rm -rf .git).
-

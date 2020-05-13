@@ -22,7 +22,7 @@ router.post('/register', async (req,res) => {
     } catch (error) {
         res.status(400).json({ error, msg:"User Creation failed" })
     }
-    // let user = new User({email , name, password: hash})
+    // let user = new User({email , name, password})
     // user.password = hash
 })
 
